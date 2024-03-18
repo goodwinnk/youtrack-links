@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <style>
+        /* Add your styles here */
+        body {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<form id="settings-form">
+    <div>
+        <label for="server-url">Server URL:</label>
+        <input type="text" id="server-url" name="server-url">
+    </div>
+    <div>
+        <label for="issues-regexp">Issues Regexp:</label>
+        <input type="text" id="issues-regexp" name="issues-regexp">
+    </div>
+    <button type="button" onclick="saveSettings()">Save</button>
+</form>
+
+<script>
+    // Function to save settings
+    function saveSettings() {
+        const serverUrl = document.getElementById('server-url').value;
+        const issuesRegexp = document.getElementById('issues-regexp').value;
+        google.script.run.withSuccessHandler(
+            function () {
+                google.script.host.close(); // Close the dialog/sidebar after saving
+            }
+        ).saveSettings(serverUrl, issuesRegexp);
+    }
+
+    // Function to populate form with existing settings
+    function setExistingSettings(settings) {
+        document.getElementById('server-url').value = settings.serverUrl;
+        document.getElementById('issues-regexp').value = settings.issuesRegexp;
+    }
+
+    google.script.run.withSuccessHandler(setExistingSettings).getExistingSettings();
+
+    Logger.log("Called");
+</script>
+</body>
+</html>

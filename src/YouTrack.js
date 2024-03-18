@@ -1,0 +1,93 @@
+const SERVER_URL_KEY = "SERVER_URL_KEY";
+const ISSUES_REGEXP_KEY = "ISSUES_REGEXP_KEY";
+
+const scriptProperties = PropertiesService.getScriptProperties();
+
+// noinspection JSUnusedGlobalSymbols
+function onOpen() {
+    DocumentApp.getUi().createAddonMenu()
+        .addItem('Update Issues Links', 'updateIssues')
+        .addItem('Settings', 'showSettingsForm')
+        .addToUi();
+
+
+    if (!scriptProperties.getProperty(SERVER_URL_KEY)) {
+        scriptProperties.setProperty(SERVER_URL_KEY, "https://youtrack.jetbrains.com");
+    }
+
+    if (!scriptProperties.getProperty(ISSUES_REGEXP_KEY)) {
+        scriptProperties.setProperty(ISSUES_REGEXP_KEY, "[A-Z]{2,10}");
+    }
+}
+
+function updateIssues() {
+    const issueLinkBase = scriptProperties.getProperty(SERVER_URL_KEY) + "/issue/";
+    const issuesKey = scriptProperties.getProperty(ISSUES_REGEXP_KEY);
+
+    const issueRegex = issuesKey + "-\\d{1,10}";
+    const body = DocumentApp.getActiveDocument().getBody();
+
+    let issueElement = body.findText(issueRegex);
+    while (issueElement != null) {
+        const issueText = issueElement.getElement().asText();
+
+        const startOffset = issueElement.getStartOffset();
+        const endOffset = issueElement.getEndOffsetInclusive();
+
+        const issueId = issueText.getText().substring(startOffset, endOffset + 1);
+        let issueStatus = isPresentAndResolved(issueId);
+        Logger.log(issueId + ':' + issueStatus);
+
+        if (issueStatus === IssuesResponse.RESOLVED || issueStatus === IssuesResponse.UNRESOLVED) {
+            const urlText = issueLinkBase + issueId;
+            issueText.setLinkUrl(startOffset, endOffset, urlText);
+        }
+
+        if (issueStatus === IssuesResponse.RESOLVED) {
+            issueText.setStrikethrough(startOffset, endOffset, true);
+        } else if ((issueStatus === IssuesResponse.UNRESOLVED)) {
+            issueText.setStrikethrough(startOffset, endOffset, false);
+        }
+
+        issueElement = body.findText(issueRegex, issueElement);
+    }
+}
+
+const IssuesResponse = {
+    ERROR_REQUEST: 0,
+    ERROR_UNKNOWN: 1,
+    ERROR_ABSENT_OR_NO_PERMISSIONS: 2,
+    RESOLVED: 3,
+    UNRESOLVED: 3
+}
+
+function isPresentAndResolved(issueId) {
+    const url = scriptProperties.getProperty(SERVER_URL_KEY) + '/api/issues/'
+        + encodeURIComponent(issueId)
+        + '?fields=resolved';
+
+    const response = UrlFetchApp.fetch(url, {'muteHttpExceptions': true});
+    const responseCode = response.getResponseCode();
+    if (!(responseCode >= 200 && responseCode < 300)) {
+        if (responseCode === 404) {
+            return IssuesResponse.ERROR_ABSENT_OR_NO_PERMISSIONS;
+        }
+
+        return IssuesResponse.ERROR_REQUEST;
+    }
+
+    const json = response.getContentText();
+    const data = JSON.parse(json);
+
+    // noinspection JSUnresolvedReference
+    let resolved = data.resolved;
+    if (resolved === undefined) {
+        return IssuesResponse.ERROR_UNKNOWN;
+    }
+
+    if (resolved != null) {
+        return IssuesResponse.RESOLVED;
+    }
+
+    return IssuesResponse.UNRESOLVED;
+}
