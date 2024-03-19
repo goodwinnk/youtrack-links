@@ -22,7 +22,7 @@ function onOpen() {
     }
 
     if (!scriptProperties.getProperty(CHECK_ISSUES_STATUS)) {
-        scriptProperties.setProperty(CHECK_ISSUES_STATUS, "true");
+        scriptProperties.setProperty(CHECK_ISSUES_STATUS, "false");
     }
 }
 

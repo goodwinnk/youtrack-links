@@ -1,10 +1,8 @@
-const FAKE_TOKEN_NOT_CHANGED = "--------"
-
 function showSettingsForm() {
     const html = HtmlService.createHtmlOutputFromFile('SettingsForm')
         .setWidth(400)
-        .setHeight(300);
-    DocumentApp.getUi().showModalDialog(html, 'Settings');
+        .setHeight(500);
+    DocumentApp.getUi().showModalDialog(html, 'YouTrack Links Settings');
 }
 
 const FAKE_TOKEN_NOT_CHANGED = "--------"
