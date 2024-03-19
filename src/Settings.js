@@ -1,3 +1,5 @@
+const FAKE_TOKEN_NOT_CHANGED = "--------"
+
 function showSettingsForm() {
     const html = HtmlService.createHtmlOutputFromFile('SettingsForm')
         .setWidth(400)

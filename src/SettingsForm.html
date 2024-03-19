@@ -3,34 +3,101 @@
 <head>
     <base target="_top">
     <style>
-        /* Add your styles here */
-        body {
-            padding: 10px;
+        /* Styles for the form container */
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Styles for form fields */
+        .form-field {
+            margin-bottom: 15px;
+        }
+
+        .form-field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-field input[type="text"],
+        .form-field input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-field input[type="checkbox"] {
+            margin-top: 5px;
+        }
+
+        /* Styles for the Save button */
+        .btn-save {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-save:hover {
+            background-color: #45a049;
+        }
+
+        /* Flexbox styles for checkbox */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
-<form id="settings-form">
-    <div>
-        <label for="server-url">Server URL:</label>
-        <input type="text" id="server-url" name="server-url">
-    </div>
-    <div>
-        <label for="issues-regexp">Issues Regexp:</label>
-        <input type="text" id="issues-regexp" name="issues-regexp">
-    </div>
-    <div>
-        <label for="check-issues-status">Check Issues Status:</label>
-        <input type="checkbox" id="check-issues-status" name="check-issues-status" onchange="toggleTokenField()">
-    </div>
-    <div>
-        <label for="api-token">Token:</label>
-        <input type="password" id="api-token" name="api-token" disabled>
-    </div>
-    <button type="button" onclick="saveSettings()">Save</button>
-</form>
+<div class="form-container">
+    <form id="settings-form">
+        <div class="form-field">
+            <label for="server-url">Server URL:</label>
+            <input type="text" id="server-url" name="server-url" required>
+        </div>
+        <div class="form-field">
+            <label for="issues-regexp">Issues Regexp:</label>
+            <input type="text" id="issues-regexp" name="issues-regexp" required>
+        </div>
+        <div class="form-field checkbox-container">
+            <input type="checkbox" id="check-issues-status" name="check-issues-status" onchange="toggleTokenField()">
+            <label for="check-issues-status">Check Issues Status</label>
+        </div>
+        <div class="form-field">
+            <label for="api-token">Token:</label>
+            <input type="password" id="api-token" name="api-token" disabled>
+        </div>
+        <button type="button" class="btn-save" onclick="saveSettings()">Save</button>
+    </form>
+</div>
 
 <script>
+    // Function to populate form with existing settings
+    function setExistingSettings(settings) {
+        document.getElementById('server-url').value = settings.serverUrl;
+        document.getElementById('issues-regexp').value = settings.issuesRegexp;
+        document.getElementById('check-issues-status').checked = settings.checkIssuesStatus;
+        document.getElementById('api-token').value = settings.apiToken || '';
+        toggleTokenField(); // Ensure the token field is correctly enabled/disabled
+    }
+
+    // Load existing settings as soon as the dialog is opened
+    google.script.run.withSuccessHandler(setExistingSettings).getExistingSettings();
+
     // Function to save settings
     function saveSettings() {
         const serverUrl = document.getElementById('server-url').value;
@@ -50,17 +117,6 @@
         const isChecked = document.getElementById('check-issues-status').checked;
         document.getElementById('api-token').disabled = !isChecked;
     }
-
-    // Function to populate form with existing settings
-    function setExistingSettings(settings) {
-        document.getElementById('server-url').value = settings.serverUrl;
-        document.getElementById('issues-regexp').value = settings.issuesRegexp;
-        document.getElementById('check-issues-status').checked = settings.checkIssuesStatus;
-        document.getElementById('api-token').value = settings.apiToken || '';
-        toggleTokenField(); // Ensure the token field is correctly enabled/disabled
-    }
-
-    google.script.run.withSuccessHandler(setExistingSettings).getExistingSettings();
 </script>
 </body>
 </html>
