@@ -5,17 +5,23 @@ function showSettingsForm() {
     DocumentApp.getUi().showModalDialog(html, 'Settings');
 }
 
+const FAKE_TOKEN_NOT_CHANGED = "--------"
+
 function getExistingSettings() {
-    Logger.log("Fetching existing settings...");
     return {
         serverUrl: scriptProperties.getProperty(SERVER_URL_KEY),
-        issuesRegexp: scriptProperties.getProperty(ISSUES_REGEXP_KEY)
+        issuesRegexp: scriptProperties.getProperty(ISSUES_REGEXP_KEY),
+        checkIssuesStatus: scriptProperties.getProperty(CHECK_ISSUES_STATUS) === "true",
+        apiToken: FAKE_TOKEN_NOT_CHANGED
     };
 }
 
-function saveSettings(serverUrl, issuesRegexp) {
+function saveSettings(serverUrl, issuesRegexp, checkIssueStatus, token) {
     scriptProperties.setProperty(SERVER_URL_KEY, serverUrl);
     scriptProperties.setProperty(ISSUES_REGEXP_KEY, issuesRegexp);
+    scriptProperties.setProperty(CHECK_ISSUES_STATUS, checkIssueStatus ? "true" : "false");
 
-    Logger.log("Settings saved: " + serverUrl + " " + issuesRegexp);
+    if (token && token !== FAKE_TOKEN_NOT_CHANGED) {
+        scriptProperties.setProperty(API_TOKEN, token);
+    }
 }

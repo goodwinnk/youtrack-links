@@ -19,6 +19,14 @@
         <label for="issues-regexp">Issues Regexp:</label>
         <input type="text" id="issues-regexp" name="issues-regexp">
     </div>
+    <div>
+        <label for="check-issues-status">Check Issues Status:</label>
+        <input type="checkbox" id="check-issues-status" name="check-issues-status" onchange="toggleTokenField()">
+    </div>
+    <div>
+        <label for="api-token">Token:</label>
+        <input type="password" id="api-token" name="api-token" disabled>
+    </div>
     <button type="button" onclick="saveSettings()">Save</button>
 </form>
 
@@ -27,22 +35,32 @@
     function saveSettings() {
         const serverUrl = document.getElementById('server-url').value;
         const issuesRegexp = document.getElementById('issues-regexp').value;
+        const checkIssuesStatus = document.getElementById('check-issues-status').checked;
+        const apiToken = document.getElementById('api-token').value;
+
         google.script.run.withSuccessHandler(
             function () {
                 google.script.host.close(); // Close the dialog/sidebar after saving
             }
-        ).saveSettings(serverUrl, issuesRegexp);
+        ).saveSettings(serverUrl, issuesRegexp, checkIssuesStatus, apiToken);
+    }
+
+    // Function to toggle the token field based on the checkbox
+    function toggleTokenField() {
+        const isChecked = document.getElementById('check-issues-status').checked;
+        document.getElementById('api-token').disabled = !isChecked;
     }
 
     // Function to populate form with existing settings
     function setExistingSettings(settings) {
         document.getElementById('server-url').value = settings.serverUrl;
         document.getElementById('issues-regexp').value = settings.issuesRegexp;
+        document.getElementById('check-issues-status').checked = settings.checkIssuesStatus;
+        document.getElementById('api-token').value = settings.apiToken || '';
+        toggleTokenField(); // Ensure the token field is correctly enabled/disabled
     }
 
     google.script.run.withSuccessHandler(setExistingSettings).getExistingSettings();
-
-    Logger.log("Called");
 </script>
 </body>
 </html>
