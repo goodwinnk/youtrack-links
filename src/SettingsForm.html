@@ -2,85 +2,41 @@
 <html>
 <head>
     <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
     <style>
-        /* Styles for the form container */
         .form-container {
             max-width: 400px;
             margin: 0 auto;
-            padding: 20px;
-            border-radius: 8px;
         }
 
-        /* Styles for form fields */
-        .form-field {
-            margin-bottom: 15px;
-        }
-
-        .form-field label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .form-field input[type="text"],
-        .form-field input[type="password"] {
+        .block input[type="text"],
+        .block input[type="password"] {
             width: calc(100% - 20px);
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .form-field input[type="checkbox"] {
-            margin-top: 0; /* Reset margin-top */
-        }
-
-        /* Styles for the Save button */
-        .btn-save {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .btn-save:hover {
-            background-color: #45a049;
-        }
-
-        /* Flexbox styles for checkbox */
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .checkbox-container input[type="checkbox"] {
-            margin-right: 10px;
-            vertical-align: middle; /* Align checkbox vertically */
         }
     </style>
 </head>
 <body>
 <div class="form-container">
-    <form id="settings-form">
-        <div class="form-field">
-            <label for="server-url">Server URL:</label>
+    <form id="settings-form" action="">
+        <div class="block form-group">
+            <label for="server-url">YouTrack URL</label>
             <input type="text" id="server-url" name="server-url" required>
         </div>
-        <div class="form-field">
-            <label for="issues-regexp">Issues Regexp:</label>
+        <div class="block form-group">
+            <label for="issues-regexp">Issues keys pattern</label>
             <input type="text" id="issues-regexp" name="issues-regexp" required>
         </div>
-        <div class="form-field checkbox-container">
+        <div class="block form-group">
             <input type="checkbox" id="check-issues-status" name="check-issues-status" onchange="toggleTokenField()">
             <label for="check-issues-status">Check issues status and presence</label>
         </div>
-        <div class="form-field">
-            <label for="api-token">Token:</label>
+        <div class="block form-group">
+            <label for="api-token">Token</label>
             <input type="password" id="api-token" name="api-token" disabled>
         </div>
-        <button type="button" class="btn-save" onclick="saveSettings()">Save</button>
+        <div class="block">
+            <button type="button" class="action" onclick="saveSettings()">Save</button>
+        </div>
     </form>
 </div>
 
