@@ -1,3 +1,10 @@
+const SERVER_URL_KEY = "SERVER_URL_KEY";
+const ISSUES_REGEXP_KEY = "ISSUES_REGEXP_KEY";
+const CHECK_ISSUES_STATUS = "CHECK_ISSUES_STATUS";
+const API_TOKEN = "API_TOKEN";
+
+const scriptProperties = PropertiesService.getScriptProperties();
+
 function showSettingsForm() {
     const html = HtmlService.createHtmlOutputFromFile('SettingsForm')
         .setWidth(400)
@@ -5,8 +12,23 @@ function showSettingsForm() {
     DocumentApp.getUi().showModalDialog(html, 'YouTrack Links Settings');
 }
 
+function initializeSettings() {
+    if (!scriptProperties.getProperty(SERVER_URL_KEY)) {
+        scriptProperties.setProperty(SERVER_URL_KEY, "https://youtrack.jetbrains.com");
+    }
+
+    if (!scriptProperties.getProperty(ISSUES_REGEXP_KEY)) {
+        scriptProperties.setProperty(ISSUES_REGEXP_KEY, "[A-Z]{2,10}");
+    }
+
+    if (!scriptProperties.getProperty(CHECK_ISSUES_STATUS)) {
+        scriptProperties.setProperty(CHECK_ISSUES_STATUS, "false");
+    }
+}
+
 const FAKE_TOKEN_NOT_CHANGED = "--------"
 
+// noinspection JSUnusedGlobalSymbols
 function getExistingSettings() {
     return {
         serverUrl: scriptProperties.getProperty(SERVER_URL_KEY),
@@ -16,6 +38,7 @@ function getExistingSettings() {
     };
 }
 
+// noinspection JSUnusedGlobalSymbols
 function saveSettings(serverUrl, issuesRegexp, checkIssueStatus, token) {
     scriptProperties.setProperty(SERVER_URL_KEY, serverUrl);
     scriptProperties.setProperty(ISSUES_REGEXP_KEY, issuesRegexp);

@@ -1,31 +1,3 @@
-const SERVER_URL_KEY = "SERVER_URL_KEY";
-const ISSUES_REGEXP_KEY = "ISSUES_REGEXP_KEY";
-const CHECK_ISSUES_STATUS = "CHECK_ISSUES_STATUS";
-const API_TOKEN = "API_TOKEN";
-
-const scriptProperties = PropertiesService.getScriptProperties();
-
-// noinspection JSUnusedGlobalSymbols
-function onOpen() {
-    DocumentApp.getUi().createAddonMenu()
-        .addItem('Update Issues Links', 'updateIssues')
-        .addItem('Settings', 'showSettingsForm')
-        .addToUi();
-
-
-    if (!scriptProperties.getProperty(SERVER_URL_KEY)) {
-        scriptProperties.setProperty(SERVER_URL_KEY, "https://youtrack.jetbrains.com");
-    }
-
-    if (!scriptProperties.getProperty(ISSUES_REGEXP_KEY)) {
-        scriptProperties.setProperty(ISSUES_REGEXP_KEY, "[A-Z]{2,10}");
-    }
-
-    if (!scriptProperties.getProperty(CHECK_ISSUES_STATUS)) {
-        scriptProperties.setProperty(CHECK_ISSUES_STATUS, "false");
-    }
-}
-
 function updateIssues() {
     const issueLinkBase = scriptProperties.getProperty(SERVER_URL_KEY) + "/issue/";
     const issuesKey = scriptProperties.getProperty(ISSUES_REGEXP_KEY);
