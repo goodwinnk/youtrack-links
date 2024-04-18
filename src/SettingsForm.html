@@ -20,11 +20,11 @@
     <form id="settings-form" action="">
         <div class="block form-group">
             <label for="server-url">YouTrack URL</label>
-            <input type="text" id="server-url" name="server-url" required>
+            <input type="text" id="server-url" name="server-url" placeholder="https://my-company.youtrack.cloud" required>
         </div>
         <div class="block form-group">
             <label for="issues-regexp">Issues keys pattern</label>
-            <input type="text" id="issues-regexp" name="issues-regexp" required>
+            <input type="text" id="issues-regexp" name="issues-regexp" placeholder="ID1|ID2 or [A-Z]{2-10}" required>
         </div>
         <div class="block form-group">
             <input type="checkbox" id="check-issues-status" name="check-issues-status" onchange="toggleTokenField()">
