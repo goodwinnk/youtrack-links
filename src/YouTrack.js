@@ -3,7 +3,7 @@ function updateIssues() {
     const issuesKey = scriptProperties.getProperty(ISSUES_REGEXP_KEY);
     const checkStatus = scriptProperties.getProperty(CHECK_ISSUES_STATUS);
 
-    const issueRegex = issuesKey + "-\\d{1,10}";
+    const issueRegex = `(${issuesKey})-\\d{1,20}`;
     const body = DocumentApp.getActiveDocument().getBody();
 
     /** @type {Array<URLFetchRequest>} */
