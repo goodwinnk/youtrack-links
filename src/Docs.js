@@ -2,8 +2,8 @@
 function onOpen() {
     DocumentApp.getUi().createAddonMenu()
         .addItem('Update Issues Links', 'updateIssues')
-        .addItem('Settings', 'showSettingsForm')
+        .addItem('Settings', 'showSettingsForm_')
         .addToUi();
 
-    initializeSettings();
+    initializeSettings_();
 }

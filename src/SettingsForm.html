@@ -18,21 +18,35 @@
 <body>
 <div class="form-container">
     <form id="settings-form" action="">
+        <? var settings = getExistingSettings(); ?>
         <div class="block form-group">
             <label for="server-url">YouTrack URL</label>
-            <input type="text" id="server-url" name="server-url" placeholder="https://my-company.youtrack.cloud" required>
+            <input type="text" id="server-url" name="server-url"
+                   placeholder="https://my-company.youtrack.cloud"
+                   value="<?= settings.serverUrl ?>"
+                   required/>
         </div>
         <div class="block form-group">
             <label for="issues-regexp">Issues keys pattern</label>
-            <input type="text" id="issues-regexp" name="issues-regexp" placeholder="ID1|ID2 or [A-Z]{2-10}" required>
+            <input type="text" id="issues-regexp" name="issues-regexp"
+                   placeholder="ID1|ID2 or [A-Z]{2-20}"
+                   value="<?= settings.issuesRegexp ?>"
+                   required>
         </div>
         <div class="block form-group">
-            <input type="checkbox" id="check-issues-status" name="check-issues-status" onchange="toggleTokenField()">
+            <input type="checkbox" id="check-issues-status" name="check-issues-status"
+                   <? if (settings.checkIssuesStatus) { ?>
+                      checked
+                   <? } ?>
+                   onchange="toggleTokenField()">
             <label for="check-issues-status">Check issues status and presence</label>
         </div>
         <div class="block form-group">
             <label for="api-token">Token</label>
-            <input type="password" id="api-token" name="api-token" disabled>
+            <input type="password" id="api-token"
+                   name="api-token"
+                   value="<?= settings.apiToken ?>"
+                   disabled>
         </div>
         <div class="block">
             <button type="button" class="action" onclick="saveSettings()">Save</button>
@@ -40,20 +54,8 @@
     </form>
 </div>
 
+
 <script>
-    // Function to populate form with existing settings
-    function setExistingSettings(settings) {
-        document.getElementById('server-url').value = settings.serverUrl;
-        document.getElementById('issues-regexp').value = settings.issuesRegexp;
-        document.getElementById('check-issues-status').checked = settings.checkIssuesStatus;
-        document.getElementById('api-token').value = settings.apiToken || '';
-        toggleTokenField(); // Ensure the token field is correctly enabled/disabled
-    }
-
-    // Load existing settings as soon as the dialog is opened
-    google.script.run.withSuccessHandler(setExistingSettings).getExistingSettings();
-
-    // Function to save settings
     function saveSettings() {
         const serverUrl = document.getElementById('server-url').value;
         const issuesRegexp = document.getElementById('issues-regexp').value;
@@ -67,11 +69,12 @@
         ).saveSettings(serverUrl, issuesRegexp, checkIssuesStatus, apiToken);
     }
 
-    // Function to toggle the token field based on the checkbox
     function toggleTokenField() {
         const isChecked = document.getElementById('check-issues-status').checked;
         document.getElementById('api-token').disabled = !isChecked;
     }
+
+    toggleTokenField();
 </script>
 </body>
 </html>

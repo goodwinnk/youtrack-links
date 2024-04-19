@@ -5,14 +5,15 @@ const API_TOKEN = "API_TOKEN";
 
 const scriptProperties = PropertiesService.getScriptProperties();
 
-function showSettingsForm() {
-    const html = HtmlService.createHtmlOutputFromFile('SettingsForm')
+function showSettingsForm_() {
+    const html = HtmlService.createTemplateFromFile('SettingsForm')
+        .evaluate()
         .setWidth(400)
         .setHeight(500);
     DocumentApp.getUi().showModalDialog(html, 'YouTrack Links Settings');
 }
 
-function initializeSettings() {
+function initializeSettings_() {
     if (!scriptProperties.getProperty(SERVER_URL_KEY)) {
         scriptProperties.setProperty(SERVER_URL_KEY, "https://youtrack.jetbrains.com");
     }
