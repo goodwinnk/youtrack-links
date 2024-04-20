@@ -13,6 +13,10 @@
         .block input[type="password"] {
             width: calc(100% - 20px);
         }
+
+        input:invalid {
+            border: 2px dashed red;
+        }
     </style>
 </head>
 <body>
@@ -78,7 +82,12 @@
         document.getElementById('api-token').disabled = !isChecked;
     }
 
-    toggleTokenField();
+    function afterLoad() {
+        toggleTokenField();
+        document.getElementById('server-url').focus()
+    }
+
+    afterLoad();
 </script>
 </body>
 </html>
