@@ -5,8 +5,11 @@ const API_TOKEN = "API_TOKEN";
 
 const scriptProperties = PropertiesService.getScriptProperties();
 
-function showSettingsForm_() {
-    const html = HtmlService.createTemplateFromFile('SettingsForm')
+function showSettingsForm_(showNeedToReRunMessage) {
+    let htmlTemplate = HtmlService.createTemplateFromFile('SettingsForm');
+    htmlTemplate.showNeedToReRunMessage = showNeedToReRunMessage || false;
+
+    const html = htmlTemplate
         .evaluate()
         .setWidth(400)
         .setHeight(500);

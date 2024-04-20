@@ -49,6 +49,10 @@
                    disabled>
         </div>
         <div class="block">
+            <? if (showNeedToReRunMessage) { ?>
+                <div>Please re-run 'Update Issues Links' action</div>
+            <? } ?>
+
             <button type="button" class="action" onclick="saveSettings()">Save</button>
         </div>
     </form>

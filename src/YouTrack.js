@@ -1,5 +1,11 @@
-function updateIssues() {
-    const issueLinkBase = scriptProperties.getProperty(SERVER_URL_KEY) + "/issue/";
+function updateIssues_() {
+    const youtrackServer = scriptProperties.getProperty(SERVER_URL_KEY);
+    if (!youtrackServer) {
+        showSettingsForm_(true);
+        return;
+    }
+
+    const issueLinkBase = youtrackServer + "/issue/";
     const issuesKey = scriptProperties.getProperty(ISSUES_REGEXP_KEY);
     const checkStatus = scriptProperties.getProperty(CHECK_ISSUES_STATUS);
 
