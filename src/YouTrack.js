@@ -1,6 +1,7 @@
 function updateIssues_() {
     const youtrackServer = scriptUserProperties.getProperty(SERVER_URL_KEY);
-    if (!youtrackServer) {
+    const issuesKey = scriptUserProperties.getProperty(ISSUES_REGEXP_KEY);
+    if (!youtrackServer || !issuesKey) {
         showSettingsForm_(true);
         return;
     }
@@ -9,13 +10,15 @@ function updateIssues_() {
     const token = scriptUserProperties.getProperty(API_TOKEN);
     if (checkStatus) {
         if (checkConnection(youtrackServer, token) != null) {
-            noYouTrackConnectionAlert();
+            customAlert(
+                "Connection Problem",
+                "⚠️ Unable to check issue statuses.\nPlease check YouTrack URL and token in Settings."
+            );
             return;
         }
     }
 
     const issueLinkBase = youtrackServer + "/issue/";
-    const issuesKey = scriptUserProperties.getProperty(ISSUES_REGEXP_KEY);
 
     const issueRegex = `(${issuesKey})-\\d{1,20}`;
     const body = DocumentApp.getActiveDocument().getBody();
@@ -31,6 +34,14 @@ function updateIssues_() {
         const startOffset = issueElement.getStartOffset();
         const endOffset = issueElement.getEndOffsetInclusive();
         const issueId = issueText.getText().substring(startOffset, endOffset + 1);
+        const issueKey = getSubstringBefore(issueId, "-")
+
+        if (issueKey.length <= 0) {
+            customAlert(
+                "Issues Key Pattern Problem",
+                "⚠️ Issues key pattern can be resolved to an empty string.\nPlease check it in Settings");
+            return;
+        }
 
         if (checkStatus) {
             const url = `${scriptUserProperties.getProperty(SERVER_URL_KEY)}/api/issues/${encodeURIComponent(issueId)}?fields=resolved`;
@@ -161,4 +172,12 @@ function checkConnection(url, token) {
         let message = `Failed to connect to ${url}`
         return HtmlService.createHtmlOutput(message).getContent();
     }
+}
+
+function getSubstringBefore(text, str) {
+    const occurrenceIndex = text.indexOf(str);
+    if (occurrenceIndex === -1) {
+        return text; // No hyphen found, return the entire string
+    }
+    return text.substring(0, occurrenceIndex);
 }

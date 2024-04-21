@@ -8,9 +8,14 @@ function onOpen() {
     initializeSettings_();
 }
 
-function noYouTrackConnectionAlert() {
-    let html = HtmlService.createHtmlOutputFromFile('NoConnection')
+function customAlert(title, message) {
+    let htmlTemplate = HtmlService.createTemplateFromFile('CustomAlert');
+    htmlTemplate.messages = message.split('\n');
+
+    let html = htmlTemplate
+        .evaluate()
         .setWidth(400);
+
     DocumentApp.getUi()
-        .showModalDialog(html, 'Connection Problem');
+        .showModalDialog(html, title);
 }

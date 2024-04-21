@@ -14,8 +14,9 @@
 <div class="form-container">
     <form id="settings-form" action="">
         <div>
-            <div>⚠️ Unable to check issue statuses.</div>
-            <div>Please check YouTrack URL and token in Settings.</div>
+            <? for (var i = 0; i < messages.length; i++) { ?>
+                <div><?= messages[i] ?></div>
+            <? } ?>
         </div>
         <button onclick="closeWindow()">OK</button>
     </form>
