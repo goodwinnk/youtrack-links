@@ -17,10 +17,6 @@ function showSettingsForm_(showNeedToReRunMessage) {
 }
 
 function initializeSettings_() {
-    if (!scriptUserProperties.getProperty(SERVER_URL_KEY)) {
-        scriptUserProperties.setProperty(SERVER_URL_KEY, "https://youtrack.jetbrains.com");
-    }
-
     if (!scriptUserProperties.getProperty(ISSUES_REGEXP_KEY)) {
         scriptUserProperties.setProperty(ISSUES_REGEXP_KEY, "[A-Z]{2,10}");
     }
