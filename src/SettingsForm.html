@@ -17,6 +17,10 @@
         input:invalid {
             border: 1px dashed red;
         }
+
+        .success-connection {
+            color: darkgreen;
+        }
     </style>
 </head>
 <body>
@@ -44,7 +48,7 @@
                    <? if (settings.checkIssuesStatus) { ?>
                       checked
                    <? } ?>
-                   onchange="toggleTokenField()">
+                   onchange="toggleCheckConnectionStatus()">
             <label for="check-issues-status">Check issues status and presence</label>
             <div class="gray">The server needs to be reachable from the internet.</div>
         </div>
@@ -52,11 +56,18 @@
             <label for="api-token">
                 API Token <a class="secondary">(How to create a new token?)</a>
             </label>
-            <input type="password" id="api-token"
-                   name="api-token"
-                   title="A token for accessing server though the API."
-                   value="<?= settings.apiToken ?>"
-                   disabled>
+            <div style="width: 100%">
+                <input type="password" id="api-token"
+                       name="api-token"
+                       title="A token for accessing server though the API."
+                       style="width: 80%"
+                       value="<?= settings.apiToken ?>"
+                       disabled>
+                <button type="button"
+                        id="connect-button"
+                        onclick="checkConnection()">Connect</button>
+                <span hidden id="connection-status" class="gray">Connecting...</span>
+            </div>
         </div>
         <div class="block">
             <? if (showNeedToReRunMessage) { ?>
@@ -83,13 +94,47 @@
         ).saveSettings(serverUrl, issuesRegexp, checkIssuesStatus, apiToken);
     }
 
-    function toggleTokenField() {
+    function toggleCheckConnectionStatus() {
         const isChecked = document.getElementById('check-issues-status').checked;
         document.getElementById('api-token').disabled = !isChecked;
+        document.getElementById('connect-button').disabled = !isChecked;
+        document.getElementById('connection-status').hidden = true;
+    }
+
+    function reportConnectionStatus(error) {
+        let connectionStatusDiv = document.getElementById('connection-status');
+        if (!error) {
+            connectionStatusDiv.innerText = "Connected!"
+            connectionStatusDiv.className = "success-connection"
+        } else {
+            connectionStatusDiv.innerText = error;
+            connectionStatusDiv.className = "error"
+        }
+    }
+
+    function reportConnectionException(error) {
+        let connectionStatusDiv = document.getElementById('connection-status');
+        connectionStatusDiv.innerHTML = "ERROR: " + error.message;
+        connectionStatusDiv.className = "error";
+    }
+
+    function checkConnection() {
+        let connectionStatusDiv = document.getElementById('connection-status');
+        connectionStatusDiv.innerText = "Connecting...";
+        connectionStatusDiv.className = "gray";
+        connectionStatusDiv.hidden = false;
+
+        const serverUrl = document.getElementById('server-url').value;
+        const apiToken = document.getElementById('api-token').value;
+
+        google.script.run
+            .withSuccessHandler(reportConnectionStatus)
+            .withFailureHandler(reportConnectionException)
+            .checkConnection(serverUrl, apiToken);
     }
 
     function afterLoad() {
-        toggleTokenField();
+        toggleCheckConnectionStatus();
         document.getElementById('server-url').focus()
     }
 

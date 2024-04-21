@@ -105,3 +105,30 @@ function isPresentAndResolved(response) {
 
     return IssuesResponse.UNRESOLVED;
 }
+
+// noinspection JSUnusedGlobalSymbols
+function checkConnection(url, token) {
+    if (token === FAKE_TOKEN_NOT_CHANGED) {
+        token = scriptUserProperties.getProperty(API_TOKEN);
+    }
+
+    const response = UrlFetchApp.fetch(
+        `${url}/api/users/me`,
+        {
+            "muteHttpExceptions": true,
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+    let responseCode = response.getResponseCode();
+    if (responseCode >= 200 && responseCode < 300) {
+        return null;
+    }
+
+    if (responseCode === 404) {
+        return `Server ${url} was not found or invalid token is used`;
+    }
+
+    return `Error: ${responseCode}`;
+}
