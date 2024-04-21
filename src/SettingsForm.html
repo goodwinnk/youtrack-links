@@ -15,7 +15,7 @@
         }
 
         input:invalid {
-            border: 2px dashed red;
+            border: 1px dashed red;
         }
     </style>
 </head>
@@ -27,6 +27,7 @@
             <label for="server-url">YouTrack URL</label>
             <input type="text" id="server-url" name="server-url"
                    placeholder="https://my-company.youtrack.cloud"
+                   title="YouTrack Server URL. Shouldn't be empty."
                    value="<?= settings.serverUrl ?>"
                    required/>
         </div>
@@ -34,6 +35,7 @@
             <label for="issues-regexp">Issues keys pattern</label>
             <input type="text" id="issues-regexp" name="issues-regexp"
                    placeholder="ID1|ID2 or [A-Z]{2,10}"
+                   title="Issues IDs pattern. Shouldn't be empty."
                    value="<?= settings.issuesRegexp ?>"
                    required>
         </div>
@@ -44,17 +46,21 @@
                    <? } ?>
                    onchange="toggleTokenField()">
             <label for="check-issues-status">Check issues status and presence</label>
+            <div class="gray">The server needs to be reachable from the internet.</div>
         </div>
         <div class="block form-group">
-            <label for="api-token">Token</label>
+            <label for="api-token">
+                API Token <a class="secondary">(How to create a new token?)</a>
+            </label>
             <input type="password" id="api-token"
                    name="api-token"
+                   title="A token for accessing server though the API."
                    value="<?= settings.apiToken ?>"
                    disabled>
         </div>
         <div class="block">
             <? if (showNeedToReRunMessage) { ?>
-                <div>Please re-run 'Update Issues Links' action</div>
+            <div>Please re-run <i>Update Issues Links</i> action</div>
             <? } ?>
 
             <button type="button" class="action" onclick="saveSettings()">Save</button>
