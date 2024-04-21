@@ -1,13 +1,14 @@
 function updateIssues_() {
-    const youtrackServer = scriptProperties.getProperty(SERVER_URL_KEY);
+    const youtrackServer = scriptUserProperties.getProperty(SERVER_URL_KEY);
     if (!youtrackServer) {
         showSettingsForm_(true);
         return;
     }
 
     const issueLinkBase = youtrackServer + "/issue/";
-    const issuesKey = scriptProperties.getProperty(ISSUES_REGEXP_KEY);
-    const checkStatus = scriptProperties.getProperty(CHECK_ISSUES_STATUS);
+    const issuesKey = scriptUserProperties.getProperty(ISSUES_REGEXP_KEY);
+    const checkStatus = scriptUserProperties.getProperty(CHECK_ISSUES_STATUS);
+    const token = scriptUserProperties.getProperty(API_TOKEN);
 
     const issueRegex = `(${issuesKey})-\\d{1,20}`;
     const body = DocumentApp.getActiveDocument().getBody();
@@ -24,7 +25,7 @@ function updateIssues_() {
         const endOffset = issueElement.getEndOffsetInclusive();
         const issueId = issueText.getText().substring(startOffset, endOffset + 1);
 
-        const url = `${scriptProperties.getProperty(SERVER_URL_KEY)}/api/issues/${encodeURIComponent(issueId)}?fields=resolved`;
+        const url = `${scriptUserProperties.getProperty(SERVER_URL_KEY)}/api/issues/${encodeURIComponent(issueId)}?fields=resolved`;
         /** @type {URLFetchRequest} */
         let issueRequest = {"url": url, "muteHttpExceptions": true};
 
