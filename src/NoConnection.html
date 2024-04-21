@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <style>
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <form id="settings-form" action="">
+        <div>
+            <div>⚠️ Unable to check issue statuses.</div>
+            <div>Please check YouTrack URL and token in Settings.</div>
+        </div>
+        <button onclick="closeWindow()">OK</button>
+    </form>
+</div>
+<script>
+    function closeWindow() {
+        google.script.host.close();
+    }
+
+    document.addEventListener('keyup', function (event) {
+        if ( event.key === 27 )   {
+            google.script.host.close();
+        }
+    })
+</script>
+</body>
+</html>

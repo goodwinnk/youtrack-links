@@ -7,3 +7,10 @@ function onOpen() {
 
     initializeSettings_();
 }
+
+function noYouTrackConnectionAlert() {
+    let html = HtmlService.createHtmlOutputFromFile('NoConnection')
+        .setWidth(400);
+    DocumentApp.getUi()
+        .showModalDialog(html, 'Connection Problem');
+}

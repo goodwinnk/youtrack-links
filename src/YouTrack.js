@@ -5,10 +5,17 @@ function updateIssues_() {
         return;
     }
 
+    const checkStatus = scriptUserProperties.getProperty(CHECK_ISSUES_STATUS) === "true";
+    const token = scriptUserProperties.getProperty(API_TOKEN);
+    if (checkStatus) {
+        if (checkConnection(youtrackServer, token) != null) {
+            noYouTrackConnectionAlert();
+            return;
+        }
+    }
+
     const issueLinkBase = youtrackServer + "/issue/";
     const issuesKey = scriptUserProperties.getProperty(ISSUES_REGEXP_KEY);
-    const checkStatus = scriptUserProperties.getProperty(CHECK_ISSUES_STATUS);
-    const token = scriptUserProperties.getProperty(API_TOKEN);
 
     const issueRegex = `(${issuesKey})-\\d{1,20}`;
     const body = DocumentApp.getActiveDocument().getBody();
@@ -25,17 +32,25 @@ function updateIssues_() {
         const endOffset = issueElement.getEndOffsetInclusive();
         const issueId = issueText.getText().substring(startOffset, endOffset + 1);
 
-        const url = `${scriptUserProperties.getProperty(SERVER_URL_KEY)}/api/issues/${encodeURIComponent(issueId)}?fields=resolved`;
-        /** @type {URLFetchRequest} */
-        let issueRequest = {"url": url, "muteHttpExceptions": true};
+        if (checkStatus) {
+            const url = `${scriptUserProperties.getProperty(SERVER_URL_KEY)}/api/issues/${encodeURIComponent(issueId)}?fields=resolved`;
+            /** @type {URLFetchRequest} */
+            let issueRequest = {
+                "url": url,
+                "muteHttpExceptions": true,
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            };
+            requests.push(issueRequest);
+        }
 
-        requests.push(issueRequest);
         issueElements.push({issueElement, startOffset, endOffset, issueId});
 
         issueElement = body.findText(issueRegex, issueElement);
     }
 
-    if (checkStatus === "true") {
+    if (checkStatus) {
         if (requests.length > 0) {
             // Execute all the requests in parallel
             const responses = UrlFetchApp.fetchAll(requests);
