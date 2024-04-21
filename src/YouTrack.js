@@ -127,23 +127,38 @@ function checkConnection(url, token) {
         token = scriptUserProperties.getProperty(API_TOKEN);
     }
 
-    const response = UrlFetchApp.fetch(
-        `${url}/api/users/me`,
-        {
-            "muteHttpExceptions": true,
-            headers: {
-                "Authorization": `Bearer ${token}`
+    try {
+        const response = UrlFetchApp.fetch(
+            `${url}/api/users/me`,
+            {
+                "muteHttpExceptions": true,
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+        let responseCode = response.getResponseCode();
+        if (responseCode >= 200 && responseCode < 300) {
+            return null;
+        }
+
+        if (responseCode === 404) {
+            return HtmlService.createHtmlOutput(`Server ${url} was not found`).getContent();
+        }
+
+        try {
+            const json = response.getContentText();
+            const error = JSON.parse(json).error;
+            if (error) {
+                return HtmlService.createHtmlOutput(`Error: ${error}`).getContent();
             }
-        });
+        } catch (error) {
+            // Ignore - just show the response code
+        }
 
-    let responseCode = response.getResponseCode();
-    if (responseCode >= 200 && responseCode < 300) {
-        return null;
+        return `Error: ${responseCode}`;
+    } catch (error) {
+        let message = `Failed to connect to ${url}`
+        return HtmlService.createHtmlOutput(message).getContent();
     }
-
-    if (responseCode === 404) {
-        return `Server ${url} was not found or invalid token is used`;
-    }
-
-    return `Error: ${responseCode}`;
 }
