@@ -102,6 +102,7 @@
     }
 
     function reportConnectionStatus(error) {
+        document.getElementById('connect-button').disabled = false;
         let connectionStatusDiv = document.getElementById('connection-status');
         if (!error) {
             connectionStatusDiv.innerText = "Connected!"
@@ -113,12 +114,15 @@
     }
 
     function reportConnectionException(error) {
+        document.getElementById('connect-button').disabled = false;
         let connectionStatusDiv = document.getElementById('connection-status');
         connectionStatusDiv.innerHTML = "ERROR: " + error.message;
         connectionStatusDiv.className = "error";
     }
 
     function checkConnection() {
+        document.getElementById('connect-button').disabled = true;
+
         let connectionStatusDiv = document.getElementById('connection-status');
         connectionStatusDiv.innerText = "Connecting...";
         connectionStatusDiv.className = "gray";
