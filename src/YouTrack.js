@@ -49,9 +49,7 @@ function updateIssues_() {
             let issueRequest = {
                 "url": url,
                 "muteHttpExceptions": true,
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
+                headers: youTrackHeader(token)
             };
             requests.push(issueRequest);
         }
@@ -132,6 +130,15 @@ function isPresentAndResolved(response) {
     return IssuesResponse.UNRESOLVED;
 }
 
+function youTrackHeader(token) {
+    let headers = {}
+    headers["Accept"] = "application/json";
+    if (token.length !== 0) {
+        headers["Authorization"] = `Bearer ${token}`;
+    }
+    return headers;
+}
+
 // noinspection JSUnusedGlobalSymbols
 function checkConnection(url, token) {
     if (token === FAKE_TOKEN_NOT_CHANGED) {
@@ -143,9 +150,7 @@ function checkConnection(url, token) {
             `${url}/api/users/me`,
             {
                 "muteHttpExceptions": true,
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
+                headers: youTrackHeader(token)
             });
 
         let responseCode = response.getResponseCode();

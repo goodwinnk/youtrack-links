@@ -44,7 +44,7 @@ function saveSettings(serverUrl, issuesRegexp, checkIssueStatus, token) {
     scriptUserProperties.setProperty(ISSUES_REGEXP_KEY, issuesRegexp);
     scriptUserProperties.setProperty(CHECK_ISSUES_STATUS, checkIssueStatus ? "true" : "false");
 
-    if (token && token !== FAKE_TOKEN_NOT_CHANGED) {
+    if (token !== FAKE_TOKEN_NOT_CHANGED) {
         scriptUserProperties.setProperty(API_TOKEN, token);
     }
 }
