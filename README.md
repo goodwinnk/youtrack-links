@@ -26,7 +26,9 @@ To access information from the server, you need an API token for authorization.
 ### A new token creation
 
 1. To create a new YouTrack token, head to your profile settings: *Profile > Account Security > New Token...* in YouTrack
+   
    ![Profile](Screenshots/token-create-profile.png "Profile in YouTrack")
+
    Need help creating a YouTrack token? Follow the [official guide](https://www.jetbrains.com/help/youtrack/server/manage-permanent-token.html#new-permanent-token).
 2. Add **Youtrack Links in Google Docs** as a Name and **YouTrack** as a Scope (name can be different)
     ![Token setup](Screenshots/token-create-setup.png "Token Setup")
