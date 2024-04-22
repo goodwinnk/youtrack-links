@@ -86,8 +86,10 @@ function updateIssues_() {
         for (let {issueElement, startOffset, endOffset, issueId} of issueElements) {
             const issueText = issueElement.getElement().asText();
 
-            const urlText = issueLinkBase + issueId;
-            issueText.setLinkUrl(startOffset, endOffset, urlText);
+            if (issueText.getLinkUrl(startOffset) == null) {
+                const urlText = issueLinkBase + issueId;
+                issueText.setLinkUrl(startOffset, endOffset, urlText);
+            }
         }
     }
 }
