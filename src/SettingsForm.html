@@ -81,6 +81,12 @@
 
 
 <script>
+    document.addEventListener('keyup', function (event) {
+        if (event.key === 'Escape') {
+            google.script.host.close();
+        }
+    })
+
     function saveSettings() {
         const serverUrl = document.getElementById('server-url').value;
         const issuesRegexp = document.getElementById('issues-regexp').value;
