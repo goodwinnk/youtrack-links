@@ -184,7 +184,7 @@ function checkConnection(url, token) {
 function getSubstringBefore(text, str) {
     const occurrenceIndex = text.indexOf(str);
     if (occurrenceIndex === -1) {
-        return text; // No hyphen found, return the entire string
+        return text;
     }
     return text.substring(0, occurrenceIndex);
 }
