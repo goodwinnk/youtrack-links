@@ -36,6 +36,7 @@
         <div class="block form-group">
             <label for="server-url">YouTrack URL</label>
             <input type="text" id="server-url" name="server-url"
+                   spellcheck="false"
                    placeholder="https://my-company.youtrack.cloud"
                    title="YouTrack Server URL. Shouldn't be empty."
                    value="<?= settings.serverUrl ?>"
@@ -44,6 +45,7 @@
         <div class="block form-group">
             <label for="issues-regexp">Issues key pattern</label>
             <input type="text" id="issues-regexp" name="issues-regexp"
+                   spellcheck="false"
                    placeholder="ID1|ID2 or [A-Z]{2,10}"
                    title="Issues IDs pattern. Shouldn't be empty."
                    value="<?= settings.issuesRegexp ?>"
