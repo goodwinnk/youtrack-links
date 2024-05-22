@@ -8,6 +8,8 @@ Benefits:
  * See issue statuses at a glance
  * Automate issues statuses update
 
+[![YouTrack Links Demonstration](https://img.youtube.com/vi/ibjd-ddn8NU/maxresdefault.jpg)](https://www.youtube.com/watch?v=ibjd-ddn8NU)
+
 ## License
 
 MIT License, Copyright (c) 2024 Nikolay Krasko
