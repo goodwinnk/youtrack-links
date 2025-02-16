@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings Form</title>
     <base target="_top">
     <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
     <style>
@@ -37,8 +40,8 @@
             <label for="server-url">YouTrack URL</label>
             <input type="text" id="server-url" name="server-url"
                    spellcheck="false"
-                   placeholder="https://my-company.youtrack.cloud"
-                   title="YouTrack Server URL. Shouldn't be empty."
+                   placeholder="https://your-company.youtrack.cloud"
+                   title="YouTrack Server URL. Enter the URL of your YouTrack server. Example: https://your-company.youtrack.cloud."
                    value="<?= settings.serverUrl ?>"
                    required/>
         </div>
@@ -47,9 +50,9 @@
             <input type="text" id="issues-regexp" name="issues-regexp"
                    spellcheck="false"
                    placeholder="ID1|ID2 or [A-Z]{2,10}"
-                   title="Issues IDs pattern. Shouldn't be empty."
+                   title="Issues IDs pattern. Enter a valid pattern (e.g., ID1|ID2 or [A-Z]{2,10])."
                    value="<?= settings.issuesRegexp ?>"
-                   required>
+                   required/>
         </div>
         <div class="block form-group">
             <input type="checkbox" id="check-issues-status" name="check-issues-status"
@@ -70,16 +73,16 @@
                        title="A token for accessing server though the API."
                        style="width: 80%"
                        value="<?= settings.apiToken ?>"
-                       disabled>
+                       disabled/>
                 <button type="button"
                         id="connect-button"
                         onclick="checkConnection()">Connect</button>
                 <span hidden id="connection-status" class="gray">Connecting...</span>
             </div>
         </div>
-        <div class="block">
+        <div class="block form-actions">
             <? if (showNeedToReRunMessage) { ?>
-            <div>Please re-run <i>Update Issues Links</i> action</div>
+                <div>Please re-run <i>Update Issues Links</i> action</div>
             <? } ?>
 
             <button type="button" class="action" onclick="saveSettings()">Save</button>
@@ -93,7 +96,7 @@
         if (event.key === 'Escape') {
             google.script.host.close();
         }
-    })
+    });
 
     function saveSettings() {
         const serverUrl = document.getElementById('server-url').value;
@@ -101,11 +104,9 @@
         const checkIssuesStatus = document.getElementById('check-issues-status').checked;
         const apiToken = document.getElementById('api-token').value;
 
-        google.script.run.withSuccessHandler(
-            function () {
-                google.script.host.close(); // Close the dialog/sidebar after saving
-            }
-        ).saveSettings(serverUrl, issuesRegexp, checkIssuesStatus, apiToken);
+        google.script.run.withSuccessHandler(function () {
+            google.script.host.close(); // Close the dialog/sidebar after saving
+        }).saveSettings(serverUrl, issuesRegexp, checkIssuesStatus, apiToken);
     }
 
     function toggleCheckConnectionStatus() {
@@ -117,27 +118,27 @@
 
     function reportConnectionStatus(error) {
         document.getElementById('connect-button').disabled = false;
-        let connectionStatusDiv = document.getElementById('connection-status');
+        const connectionStatusDiv = document.getElementById('connection-status');
         if (!error) {
-            connectionStatusDiv.innerText = "Connected!"
-            connectionStatusDiv.className = "success-connection"
+            connectionStatusDiv.innerText = "Connected!";
+            connectionStatusDiv.className = "success-connection";
         } else {
             connectionStatusDiv.innerText = error;
-            connectionStatusDiv.className = "error"
+            connectionStatusDiv.className = "error";
         }
     }
 
     function reportConnectionException(error) {
         document.getElementById('connect-button').disabled = false;
-        let connectionStatusDiv = document.getElementById('connection-status');
-        connectionStatusDiv.innerHTML = "ERROR: " + error.message;
+        const connectionStatusDiv = document.getElementById('connection-status');
+        connectionStatusDiv.innerText = `ERROR: ${error.message}`;
         connectionStatusDiv.className = "error";
     }
 
     function checkConnection() {
         document.getElementById('connect-button').disabled = true;
 
-        let connectionStatusDiv = document.getElementById('connection-status');
+        const connectionStatusDiv = document.getElementById('connection-status');
         connectionStatusDiv.innerText = "Connecting...";
         connectionStatusDiv.className = "gray";
         connectionStatusDiv.hidden = false;
@@ -153,7 +154,7 @@
 
     function afterLoad() {
         toggleCheckConnectionStatus();
-        document.getElementById('server-url').focus()
+        document.getElementById('server-url').focus();
     }
 
     afterLoad();
